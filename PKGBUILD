@@ -3,10 +3,10 @@
 
 pkgname=mmv
 pkgver=1.01b.orig
-pkgrel=3
+pkgrel=4
 pkgdesc="multiple move files"
-source=(http://ftp.de.debian.org/debian/pool/main/m/mmv/mmv_1.01b.orig.tar.gz http://ftp.de.debian.org/debian/pool/main/m/mmv/mmv_1.01b-15.diff.gz)
-md5sums=('1b2135ab2f17bdfa9e08debbb3c46ad8' '991e5c7ef7b78a05aba1b81c36c6288c')
+source=(http://ftp.de.debian.org/debian/pool/main/m/mmv/mmv_1.01b.orig.tar.gz http://ftp.de.debian.org/debian/pool/main/m/mmv/mmv_1.01b-19.debian.tar.xz)
+md5sums=('1b2135ab2f17bdfa9e08debbb3c46ad8' '5952faa99a610afdbba73d20d68c6d0f')
 
 url="http://linux.maruhn.com/sec/mmv.html"
 license=('GPL')
@@ -14,8 +14,12 @@ install=$pkgname.install
 arch=('i686' 'x86_64')
 
 prepare() {
+  tar xJvf mmv_1.01b-19.debian.tar.xz 
   cd "${srcdir}/$pkgname-$pkgver"
-  patch -p1 < ../mmv_1.01b-15.diff
+  for i in $(cat ../debian/patches/series); do
+    echo $i
+    patch -p1 < ../debian/patches/$i
+  done
   sed -i -e "s/LDFLAGS.\s=-s -N/LDFLAGS	=-s/g" Makefile
   sed -i 's!/usr/man!/usr/share/man!' Makefile
 }
